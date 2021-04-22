@@ -7,7 +7,7 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Users, UserCreateInput } from '../entities/User';
 
 export interface IUserService {
-    create (user: UserCreateInput): Users
+    create (user: UserCreateInput):  Promise<Users>
     findById (id: number): Promise<Users>
     findAll (startRow: number,
              pageSize: number,
@@ -29,8 +29,9 @@ export class UserService implements IUserService {
     ) {
     }
 
-    create(user: UserCreateInput) {
-        return this.usersRepository.create(user);
+    async create(user: UserCreateInput) {
+        const createdUser = await this.usersRepository.create(user)
+        return createdUser;
     }
 
     async findById(id: number) {
@@ -81,7 +82,7 @@ export class UserService implements IUserService {
         return this.usersRepository.update(+id, updateUserBody);
     }
 
-    remove(id: number) {
+    async remove(id: number) {
         return this.usersRepository.delete(id);
     }
 }

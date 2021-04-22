@@ -48,6 +48,8 @@ export class UserNotFound {
 @InputType()
 export class UserCreateInput {
   @Field()
+  id: number;
+  @Field()
   name: string;
   @Field()
   surname: string;

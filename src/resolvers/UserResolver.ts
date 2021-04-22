@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi'
-import {Resolver, Query, Mutation, Arg, Args} from "type-graphql";
+import {Resolver, Query, Mutation, Arg, Args, Int} from "type-graphql";
+import { DeleteResult, UpdateResult, Repository, SelectQueryBuilder } from "typeorm";
 
 import { Users, UserResponse, UserCreateInput } from "../entities/User";
 import { UserService, IUserService } from '../controllers/UserController';
@@ -18,19 +19,20 @@ export class UserResolver {
 
   @Mutation(() => Users)
   public async create (
-      @Args() { name, surname, age }: CreateUserArgs
+      @Args() { id, name, surname, age }: CreateUserArgs
   ): Promise<Users> {
-    return this.userService.create({name, surname, age});
+    return this.userService.create({id, name, surname, age});
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Int)
   async deleteUser(
       @Args() { id }: GetAppByIdArgs
   ) {
-    return this.userService.remove(id);
+    const { affected } = await this.userService.remove(id);
+    return affected === 1 ? id : 0
   }
 
-  @Mutation(() => UserResponse)
+  @Mutation(() => Users)
   async updateUser(
       @Args() { id }: GetAppByIdArgs,
       @Arg('updateUserBody', () => UserCreateInput) updateUserBody: UserCreateInput) {
