@@ -1,5 +1,6 @@
 import { ArgsType, Field, Int } from 'type-graphql'
 import { IsInt } from 'class-validator'
+import { GraphQLJSONObject } from 'graphql-type-json'
 
 @ArgsType()
 class GetAllArgs {
@@ -14,8 +15,9 @@ class GetAllArgs {
     @Field()
     orderBy: string
 
-    @Field()
-    query: string
+    @Field(() => GraphQLJSONObject)
+    query: object
+
 }
 
 export default GetAllArgs

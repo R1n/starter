@@ -10,7 +10,8 @@
     "build": "tsc --project ./tsconfig.json",
     "debug": "nodemon --inspect=5858 -e ts,tsx --exec node -r ts-node/register ./src/index.ts",
     "migrations:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migrations:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert"
+    "migrations:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
+    "migration": "yarn typeorm migration:run"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,7 @@
     "class-validator": "^0.12.2",
     "express": "^4.17.1",
     "graphql": "^15.3.0",
+    "graphql-type-json": "^0.3.2",
     "graphql-upload": "^11.0.0",
     "http-status-codes": "^2.1.4",
     "metadata": "^0.1.0",

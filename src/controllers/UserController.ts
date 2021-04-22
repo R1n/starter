@@ -11,7 +11,7 @@ export interface IUserService {
     findById (id: number): Promise<Users>
     findAll (startRow: number,
              pageSize: number,
-             orderBy: String,
+             orderBy: string,
              query): Promise<[any[], number]>
     update (id: number, UserCreateInput): Promise<UpdateResult>
     remove (id: number): Promise<DeleteResult>
@@ -55,15 +55,16 @@ export class UserService implements IUserService {
             .createQueryBuilder()
             .skip(startRow)
             .take(pageSize);
-        if (query['like.name']) {
+
+        if (query['name']) {
             qb
                 .andWhere('name like :name')
-                .setParameter('name', '%' + query['like.name'] + '%');
+                .setParameter('name', '%' + query['name'] + '%');
         }
-        if (query['like.surname']) {
+        if (query['surname']) {
             qb
                 .andWhere('surname like :surname')
-                .setParameter('surname', '%' + query['like.surname'] + '%');
+                .setParameter('surname', '%' + query['surname'] + '%');
         }
         const result = await qb.orderBy('name', "ASC").getManyAndCount();
         return result;
