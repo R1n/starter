@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    image: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src
+    env_file: .env
+    ports:
+      - "4000:3000"
+    volumes:
+      - .:/usr/src
+#    networks:
+#      - app
+
+  # Postgres DB
+  postgres:
+    image: postgres
+    ports:
+      - "54320:5432"
+    environment:
+      - POSTGRES_NAME
+      - POSTGRES_USERNAME
+      - POSTGRES_PASSWORD
+#    networks:
+#      - app
+
