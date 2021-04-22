@@ -1,6 +1,5 @@
 import { Service, Inject } from 'typedi'
 import {Resolver, Query, Mutation, Arg, Args, Int} from "type-graphql";
-import { DeleteResult, UpdateResult, Repository, SelectQueryBuilder } from "typeorm";
 
 import { Users, UserResponse, UserCreateInput } from "../entities/User";
 import { UserService, IUserService } from '../controllers/UserController';
