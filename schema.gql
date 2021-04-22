@@ -3,18 +3,11 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Mutation {
-  createUser(variables: UserCreateInput!): User!
-  deleteUser(id: Float!): Boolean!
-  updateUser(fields: UserCreateInput!, id: Float!): UserResponse!
-}
-
 type Query {
-  getAllUsers: [User!]!
-  getById(id: String!): [User!]!
+  getById(id: String!): Users!
 }
 
-type User {
+type Users {
   age: Float!
   created_at: String!
   id: Int!
@@ -22,16 +15,3 @@ type User {
   surname: String!
   updated_at: String!
 }
-
-input UserCreateInput {
-  id: String!
-  name: String!
-  surname: String!
-}
-
-type UserNotFound {
-  code: Float!
-  message: String!
-}
-
-union UserResponse = User | UserNotFound

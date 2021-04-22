@@ -47,7 +47,7 @@ export class UserService implements IUserService {
 
     async findAll(startRow: number,
                   pageSize: number,
-                  orderBy: String,
+                  orderBy: string,
                   query,
                   ) {
         if (!orderBy) orderBy = this.orderByDefault;
@@ -69,7 +69,7 @@ export class UserService implements IUserService {
         return result;
     }
 
-    update(id: string, updateUserBody: UserCreateInput) {
+    update(id: number, updateUserBody: UserCreateInput) {
         // const user = this.usersRepository.create(updateUserBody);
         // const errors = await validate(user, { stopAtFirstError: false });
         // if (errors.length) {
