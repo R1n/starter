@@ -10,7 +10,7 @@ import { createUnionType } from 'type-graphql'
 
 @ObjectType()
 @Entity()
-export class User {
+export class Users {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -45,21 +45,20 @@ export class UserNotFound {
   message: string = "User not found";
 }
 
-
 @InputType()
 export class UserCreateInput {
-  @Field()
-  id: string;
   @Field()
   name: string;
   @Field()
   surname: string;
+  @Field()
+  age: number;
 }
 
 export const UserResponse = createUnionType({
   name: "UserResponse",
-  types: () => [User, UserNotFound],
+  types: () => [Users, UserNotFound],
   resolveType: (value) => {
-    return "id" in value ? User : UserNotFound;
+    return "id" in value ? Users : UserNotFound;
   },
 });

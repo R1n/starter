@@ -1,48 +1,55 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { Inject } from 'typedi';
-import { Repository } from 'typeorm';
+import { Service, Inject } from 'typedi'
+import {Resolver, Query, Mutation, Arg, Args} from "type-graphql";
 
-import { User, UserResponse, UserCreateInput } from "../entities/User";
-import { UserController } from '../controllers/UserController';
+import { Users, UserResponse, UserCreateInput } from "../entities/User";
+import { UserService, IUserService } from '../controllers/UserController';
+import  GetAppByIdArgs  from '../inputs/GetAppByIdArgs';
+import  GetAllArgs  from '../inputs/GetAllArgs';
+import  CreateUserArgs  from '../inputs/CreateUserArgs';
 
+@Service()
 @Resolver()
 export class UserResolver {
   constructor (
-      @InjectRepository(User, process.env.DB_CONNECTION)
-      private appRepo: Repository<User>,
-      @Inject(() => UserController)
-      private userController,
+      @Inject(() => UserService)
+      private userService: IUserService
   ) {
   }
 
-  @Mutation(() => User)
-  async createUser(@Arg('variables', () => UserCreateInput) variables: UserCreateInput) {
-    return this.userController.createUser(variables);
+  @Mutation(() => Users)
+  public async createApp (
+      @Args() { name, surname, age }: CreateUserArgs
+  ): Promise<Users> {
+    return this.userService.create({name, surname, age});
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Arg('id', () => Number) id: number) {
-    return this.userController.deleteUser(id);
+  async deleteUser(
+      @Args() { id }: GetAppByIdArgs
+  ) {
+    return this.userService.remove(id);
   }
 
   @Mutation(() => UserResponse)
   async updateUser(
-      @Arg('id', () => Number) id: number,
-      @Arg('fields', () => UserCreateInput) fields: UserCreateInput) {
-    return this.userController.updateUser(id, fields);
+      @Args() { id }: GetAppByIdArgs,
+      @Arg('updateUserBody', () => UserCreateInput) updateUserBody: UserCreateInput) {
+    return this.userService.update(id, updateUserBody);
   }
 
-  @Query(() => [User])
-  getById(
-      @Arg('id', () => String) id: string,
+  @Query(() => Users)
+  async getById(
+      @Args() { id }: GetAppByIdArgs
   ) {
-    return this.userController.findById(id);
+    const user = await this.userService.findById(id) as Users;
+    return user;
   }
 
-  @Query(() => [User])
-  getAllUsers() {
-    return this.userController.findAll();
+  @Query(() => [Users])
+  getAllUsers(
+      @Args() {startRow, pageSize, orderBy, query}:  GetAllArgs
+) {
+    return this.userService.findAll(startRow, pageSize, orderBy, query);
   }
 }
 

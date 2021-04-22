@@ -6,6 +6,8 @@ import { config } from 'dotenv'
 config()
 
 import "reflect-metadata";
+import { Container } from "typedi";
+
 import { UserResolver } from "./resolvers/UserResolver";
 import {connect} from './config/typeorm';
 
@@ -16,9 +18,9 @@ const main = async () => {
   app.use('/graphql', graphqlUploadExpress({ maxFileSize: 5000000, maxFiles: 1 }))
 
   const schema = await buildSchema({
+          container: Container,
           resolvers: [UserResolver],
           validate: false,
-          emitSchemaFile: true,
   });
 
   const appolloServer = new ApolloServer({

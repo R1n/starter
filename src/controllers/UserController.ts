@@ -1,30 +1,48 @@
 import { validate } from "class-validator";
-import { Repository, SelectQueryBuilder } from "typeorm";
+import { Service } from 'typedi'
+import { InjectRepository } from 'typeorm-typedi-extensions'
+import { DeleteResult, UpdateResult, Repository, SelectQueryBuilder } from "typeorm";
 import { ApolloError, UserInputError } from 'apollo-server-express'
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import { User } from '../entities/User';
+import { Users, UserCreateInput } from '../entities/User';
 
-export class UserController {
+export interface IUserService {
+    create (user: UserCreateInput): Users
+    findById (id: number): Promise<Users>
+    findAll (startRow: number,
+             pageSize: number,
+             orderBy: String,
+             query): Promise<[any[], number]>
+    update (id: number, UserCreateInput): Promise<UpdateResult>
+    remove (id: number): Promise<DeleteResult>
+
+}
+
+@Service()
+export class UserService implements IUserService {
 
     private orderByDefault: string = 'name asc';
 
-    constructor(private usersRepository: Repository<User>) {
+    constructor(
+    @InjectRepository(Users, process.env.DB_CONNECTION)
+    private usersRepository: Repository<Users>,
+    ) {
     }
 
-    create(user: User) {
+    create(user: UserCreateInput) {
         return this.usersRepository.create(user);
     }
 
-    findById(id: string) {
-        return this.usersRepository.findOne(+id)
-            .then(user => {
-                if (!user) {
-                    throw new ApolloError(ReasonPhrases.NOT_FOUND, StatusCodes.NOT_FOUND.toString());
-                }
-                return user;
-            }).catch(ex => {
-                throw new ApolloError(ex.message, ex.status);
-            });
+    async findById(id: number) {
+        try{
+            const user = await this.usersRepository.findOne(+id);
+            if (!user) {
+                throw new ApolloError(ReasonPhrases.NOT_FOUND, StatusCodes.NOT_FOUND.toString());
+            }
+            return user;
+        } catch(ex) {
+            throw new ApolloError(ex.message, ex.status);
+        }
     }
 
     async findAll(startRow: number,
@@ -33,7 +51,7 @@ export class UserController {
                   query,
                   ) {
         if (!orderBy) orderBy = this.orderByDefault;
-        const qb: SelectQueryBuilder<User> = this.usersRepository
+        const qb: SelectQueryBuilder<Users> = this.usersRepository
             .createQueryBuilder()
             .skip(startRow)
             .take(pageSize);
@@ -51,7 +69,7 @@ export class UserController {
         return result;
     }
 
-    update(id: string, updateUserBody: User) {
+    update(id: string, updateUserBody: UserCreateInput) {
         // const user = this.usersRepository.create(updateUserBody);
         // const errors = await validate(user, { stopAtFirstError: false });
         // if (errors.length) {
@@ -61,7 +79,7 @@ export class UserController {
         return this.usersRepository.update(+id, updateUserBody);
     }
 
-    remove(id: string) {
-        return this.usersRepository.delete(+id);
+    remove(id: number) {
+        return this.usersRepository.delete(id);
     }
 }
