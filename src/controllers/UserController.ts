@@ -67,6 +67,7 @@ export class UserService implements IUserService {
                 .setParameter('surname', '%' + query['surname'] + '%');
         }
         const result = await qb.orderBy('name', "ASC").getManyAndCount();
+        console.log(result);
         return result;
     }
 

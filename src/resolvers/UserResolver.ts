@@ -17,7 +17,7 @@ export class UserResolver {
   }
 
   @Mutation(() => Users)
-  public async createApp (
+  public async create (
       @Args() { name, surname, age }: CreateUserArgs
   ): Promise<Users> {
     return this.userService.create({name, surname, age});
