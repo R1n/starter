@@ -2,6 +2,7 @@ import { ArgsType, Field, Int } from 'type-graphql'
 import { IsInt } from 'class-validator'
 import { GraphQLJSONObject } from 'graphql-type-json'
 
+
 @ArgsType()
 class GetAllArgs {
     @Field(() => Int)
@@ -13,7 +14,7 @@ class GetAllArgs {
     pageSize: number
 
     @Field()
-    orderBy: string
+    orderBy: 'ASC' | 'DESC'
 
     @Field(() => GraphQLJSONObject)
     query: object

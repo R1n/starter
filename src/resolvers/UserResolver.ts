@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi'
 import {Resolver, Query, Mutation, Arg, Args, Int} from "type-graphql";
 
 import { Users, UserResponse, UserCreateInput } from "../entities/User";
-import { UserService, IUserService } from '../controllers/UserController';
+import { UserService, IUserService } from '../services/UserService';
 import  GetAppByIdArgs  from '../inputs/GetAppByIdArgs';
 import  GetAllArgs  from '../inputs/GetAllArgs';
 import  CreateUserArgs  from '../inputs/CreateUserArgs';

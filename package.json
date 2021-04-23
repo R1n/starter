@@ -10,8 +10,7 @@
     "build": "tsc --project ./tsconfig.json",
     "debug": "nodemon --inspect=5858 -e ts,tsx --exec node -r ts-node/register ./src/index.ts",
     "migrations:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
-    "migrations:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
-    "migration": "yarn typeorm migration:run"
+    "migrations:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert"
   },
   "keywords": [],
   "author": "",

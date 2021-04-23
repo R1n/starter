@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
+import { Service } from 'typedi'
 
-export class Migration20200822141024 implements MigrationInterface {
+@Service()
+export class Migration20200822141026 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -8,7 +10,7 @@ export class Migration20200822141024 implements MigrationInterface {
                 id SERIAL NOT NULL PRIMARY KEY,
                 name VARCHAR(50),
                 surname VARCHAR(50),
-                age VARCHAR(100),
+                age INTEGER,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
                 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
                 );`

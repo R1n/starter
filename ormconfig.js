@@ -10,8 +10,7 @@ module.exports = {
           `${__dirname}/dist/entities/**.js`
     ],
     migrations: [
-        "dist/migrations/*.{.ts,.js}",
-        "src/migrations/*.{.ts,.js}",
+        `${__dirname}/dist/migrations/**.js`,
     ],
     logging: false
   }

@@ -16,14 +16,6 @@ export class Users {
   id!: number;
 
   @Field(() => String)
-  @Column({ type: "date", default: "NOW()" })
-  created_at = new Date();
-
-  @Field(() => String)
-  @Column({ type: "date", default: "NOW()" })
-  updated_at = new Date();
-
-  @Field(() => String)
   @Column({ type: "text" })
   name!: string;
 

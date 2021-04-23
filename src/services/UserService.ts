@@ -7,7 +7,7 @@ import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import { Users, UserCreateInput } from '../entities/User';
 
 export interface IUserService {
-    create (user: UserCreateInput):  Promise<Users>
+    create (user: UserCreateInput): Promise<Users>
     findById (id: number): Promise<Users>
     findAll (startRow: number,
              pageSize: number,
@@ -20,8 +20,6 @@ export interface IUserService {
 
 @Service()
 export class UserService implements IUserService {
-
-    private orderByDefault: string = 'name asc';
 
     constructor(
     @InjectRepository(Users, process.env.DB_CONNECTION)
@@ -36,7 +34,7 @@ export class UserService implements IUserService {
 
     async findById(id: number) {
         try{
-            const user = await this.usersRepository.findOne(+id);
+            const user = await this.usersRepository.findOne(id);
             if (!user) {
                 throw new ApolloError(ReasonPhrases.NOT_FOUND, StatusCodes.NOT_FOUND.toString());
             }
@@ -46,12 +44,7 @@ export class UserService implements IUserService {
         }
     }
 
-    async findAll(startRow: number,
-                  pageSize: number,
-                  orderBy: string,
-                  query,
-                  ) {
-        if (!orderBy) orderBy = this.orderByDefault;
+    async findAll(startRow, pageSize, orderBy: 'ASC' | 'DESC' = 'ASC', query) {
         const qb: SelectQueryBuilder<Users> = this.usersRepository
             .createQueryBuilder()
             .skip(startRow)
@@ -67,8 +60,7 @@ export class UserService implements IUserService {
                 .andWhere('surname like :surname')
                 .setParameter('surname', '%' + query['surname'] + '%');
         }
-        const result = await qb.orderBy('name', "ASC").getManyAndCount();
-        console.log(result);
+        const result = await qb.orderBy('name', orderBy).getManyAndCount();
         return result;
     }
 
