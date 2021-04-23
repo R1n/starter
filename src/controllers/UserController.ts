@@ -73,13 +73,7 @@ export class UserService implements IUserService {
     }
 
     update(id: number, updateUserBody: UserCreateInput) {
-        // const user = this.usersRepository.create(updateUserBody);
-        // const errors = await validate(user, { stopAtFirstError: false });
-        // if (errors.length) {
-        //     throw new UserInputError(errors);
-        // }
-
-        return this.usersRepository.update(+id, updateUserBody);
+        return this.usersRepository.update(id, updateUserBody);
     }
 
     async remove(id: number) {
