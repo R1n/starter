@@ -1,13 +1,8 @@
-import {ArgsType, Field, Int} from 'type-graphql'
-import {IsInt, Matches, Min} from 'class-validator'
+import { ArgsType, Field } from 'type-graphql'
+import { Matches } from 'class-validator'
 
 @ArgsType()
 class CreateUserArgs {
-    @Field(() => Int)
-    @IsInt({ message: "'id' value should be a positive integer" })
-    @Min(1, { message: "'id' value should be a positive integer" })
-    id: number
-
     @Field()
     @Matches(/^[a-zA-Z_ ]*$/, { message: "Username should only contain letters, numbers and underscore" })
     name: string

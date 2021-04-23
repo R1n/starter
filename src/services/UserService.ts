@@ -12,7 +12,7 @@ export interface IUserService {
     findAll (startRow: number,
              pageSize: number,
              orderBy: string,
-             query): Promise<[any[], number]>
+             query): Promise<{data: Users[], total: number}>
     update (id: number, UserCreateInput): Promise<UpdateResult>
     remove (id: number): Promise<DeleteResult>
 
@@ -27,9 +27,9 @@ export class UserService implements IUserService {
     ) {
     }
 
-    async create(user: UserCreateInput) {
+    async create(user: Users) {
         const createdUser = await this.usersRepository.create(user)
-        return createdUser;
+        return await this.usersRepository.save(createdUser);
     }
 
     async findById(id: number) {
@@ -50,18 +50,28 @@ export class UserService implements IUserService {
             .skip(startRow)
             .take(pageSize);
 
+        let sortBy;
         if (query['name']) {
+            sortBy = 'name';
+
             qb
                 .andWhere('name like :name')
                 .setParameter('name', '%' + query['name'] + '%');
         }
         if (query['surname']) {
+            sortBy = 'surname';
+
             qb
                 .andWhere('surname like :surname')
                 .setParameter('surname', '%' + query['surname'] + '%');
         }
-        const result = await qb.orderBy('name', orderBy).getManyAndCount();
-        return result;
+
+        const [data, total] = await qb.orderBy(sortBy, orderBy).getManyAndCount();
+
+        return {
+            data,
+            total,
+        };
     }
 
     update(id: number, updateUserBody: UserCreateInput) {

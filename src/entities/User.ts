@@ -37,10 +37,17 @@ export class UserNotFound {
   message: string = "User not found";
 }
 
+@ObjectType()
+export class UsersCount {
+  @Field(type => [Users])
+  data: Users[];
+
+  @Field()
+  total: number;
+}
+
 @InputType()
 export class UserCreateInput {
-  @Field()
-  id: number;
   @Field()
   name: string;
   @Field()

@@ -1,7 +1,7 @@
 import { Service, Inject } from 'typedi'
 import {Resolver, Query, Mutation, Arg, Args, Int} from "type-graphql";
 
-import { Users, UserResponse, UserCreateInput } from "../entities/User";
+import {Users, UserResponse, UserCreateInput, UsersCount} from "../entities/User";
 import { UserService, IUserService } from '../services/UserService';
 import  GetAppByIdArgs  from '../inputs/GetAppByIdArgs';
 import  GetAllArgs  from '../inputs/GetAllArgs';
@@ -18,9 +18,9 @@ export class UserResolver {
 
   @Mutation(() => Users)
   public async create (
-      @Args() { id, name, surname, age }: CreateUserArgs
+      @Args() { name, surname, age }: CreateUserArgs
   ): Promise<Users> {
-    return this.userService.create({id, name, surname, age});
+    return this.userService.create({ name, surname, age});
   }
 
   @Mutation(() => Int)
@@ -46,8 +46,8 @@ export class UserResolver {
     return user;
   }
 
-  @Query(() => [Users])
-  getAllUsers(
+  @Query(type => UsersCount)
+  async getAllUsers(
       @Args() {startRow, pageSize, orderBy, query}:  GetAllArgs
 ) {
     return this.userService.findAll(startRow, pageSize, orderBy, query);
