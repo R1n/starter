@@ -1,7 +1,6 @@
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { graphqlUploadExpress } from 'graphql-upload'
 import { config } from 'dotenv'
 config()
 
@@ -15,7 +14,7 @@ const main = async () => {
   await connect();
 
   const app = express();
-  app.use('/graphql', graphqlUploadExpress({ maxFileSize: 5000000, maxFiles: 1 }))
+  app.use('/graphql')
 
   const schema = await buildSchema({
           container: Container,
